@@ -5,6 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title> Responsive Registration Form | CodingLab </title>
   <link rel="stylesheet" href="style.css">
+ <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+        (function() { emailjs.init( "publicKey: CJa6uAFSGuNnBWB1A"); })();  // Replace with your EmailJS user ID
+
+        function sendEmail(event) {
+            event.preventDefault();
+
+            emailjs.sendForm('service_pjilaxm', 'template_i7gse1q', event.target)
+                .then((response) => {
+                    alert("Message sent successfully!");
+                }, (error) => {
+                    alert("Failed to send the message. Please try again.");
+                });
+        }
+    </script>
 </head>
 <body>
   <div class="container">
@@ -12,7 +27,7 @@
     <div class="title">Registration </div>
     <div class="content">
       <!-- Registration form -->
-      <form action="https://getform.io/f/alllyyna" method="POST">
+      <form onsubmit="sendEmail(event)">
         <div class="user-details">
           <!-- Input for Full Name -->
           <div class="input-box">
@@ -39,7 +54,7 @@
             <span class="details">Password</span>
             <input type="text" name="password" placeholder="Enter your password" required>
           </div>
-          <!-- Input for Confirm Password -->
+          <!-- Input for mpesa code verification -->
           <div class="input-box">
             <span class="details">Mpesa code</span>
             <input type="text" name="code" placeholder="Input Mpesa Code" required>
