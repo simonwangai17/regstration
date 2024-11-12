@@ -43,8 +43,14 @@
           <!-- Input for mpesa code verification -->
           <div class="input-box">
             <span class="details">Referral code</span>
-            <input type="text" name="code" placeholder="Input Referral Code" required>
-          </div>
+            <select name="code" required>
+                <option value="" disabled selected>Select Referral Code</option>
+                <option value="REF123">SIMON01</option>
+                <option value="REF456"></option>
+                <option value="REF789"></option>
+                <!-- Add more options as needed -->
+            </select>
+        </div>
         </div>
         <div class="gender-details">
           <!-- Radio buttons for gender selection -->
