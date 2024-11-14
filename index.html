@@ -3,49 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> Jamii Investors</title>
+  <title>Jamii Investors</title>
   <link rel="stylesheet" href="style.css">
- 
+  <style>
+    /* Style for the payment popup */
+    .popup-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .popup-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .popup-content h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .popup-content p {
+      font-size: 16px;
+      line-height: 1.5;
+      margin: 5px 0;
+    }
+
+    .close-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #FFC037;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <!-- Title section -->
-    <div class="title">Registration </div>
+    <div class="title">Registration</div>
     <div class="content">
       <!-- Registration form -->
       <form action="https://smartforms.dev/submit/6732a6e75df1517d48d953c0" method="POST">
         <div class="user-details">
-          <!-- Input for Full Name -->
+          <!-- Input fields for user details -->
           <div class="input-box">
             <span class="details">Full Name</span>
             <input type="text" name="sname" placeholder="Enter your name" required>
           </div>
-          <!-- Input for Username -->
           <div class="input-box">
             <span class="details">Username</span>
             <input type="text" name="username" placeholder="Enter your username" required>
           </div>
-          <!-- Input for Email -->
           <div class="input-box">
             <span class="details">Email</span>
             <input type="text" name="email" placeholder="Enter your email" required>
           </div>
-          <!-- Input for Phone Number -->
           <div class="input-box">
             <span class="details">Phone Number</span>
             <input type="text" name="phone" placeholder="Enter your number" required>
           </div>
-          <!-- Input for Password -->
           <div class="input-box">
             <span class="details">Password</span>
-            <input type="text" name="password" placeholder="Enter your password" required>
+            <input type="password" name="password" placeholder="Enter your password" required>
           </div>
-          <!-- Input for mpesa code verification -->
+
+          <!-- Payment method selection -->
           <div class="input-box">
-            <span class="details">Mpesa code</span>
+            <span class="details">Payment Method</span>
+            <select id="paymentMethod" name="paymentMethod" onchange="showMpesaInstructions()">
+              <option value="">Select Payment Method</option>
+              <option value="mpesa">Mpesa</option>
+              <option value="paypal">PayPal</option>
+            </select>
+          </div>
+
+          <!-- Input for Mpesa code verification, hidden until payment method is chosen -->
+          <div class="input-box" id="mpesaCodeField" style="display: none;">
+            <span class="details">Mpesa Code</span>
             <input type="text" name="code" placeholder="Input Mpesa Code" required>
           </div>
         </div>
+
         <div class="gender-details">
           <!-- Radio buttons for gender selection -->
           <input type="radio" name="gender" id="dot-1">
@@ -53,23 +105,12 @@
           <input type="radio" name="gender" id="dot-3">
           <span class="gender-title">Gender</span>
           <div class="category">
-            <!-- Label for Male -->
-            <label for="dot-1">
-              <span class="dot one"></span>
-              <span class="gender">Male</span>
-            </label>
-            <!-- Label for Female -->
-            <label for="dot-2">
-              <span class="dot two"></span>
-              <span class="gender">Female</span>
-            </label>
-            <!-- Label for Prefer not to say -->
-            <label for="dot-3">
-              <span class="dot three"></span>
-              <span class="gender">Prefer not to say</span>
-            </label>
+            <label for="dot-1"><span class="dot one"></span><span class="gender">Male</span></label>
+            <label for="dot-2"><span class="dot two"></span><span class="gender">Female</span></label>
+            <label for="dot-3"><span class="dot three"></span><span class="gender">Prefer not to say</span></label>
           </div>
         </div>
+        
         <!-- Submit button -->
         <div class="button">
           <input type="submit" value="Register">
@@ -77,5 +118,41 @@
       </form>
     </div>
   </div>
+
+  <!-- Popup overlay for Mpesa instructions -->
+  <div class="popup-overlay" id="mpesaPopup">
+    <div class="popup-content">
+      <h2>Mpesa Payment Instructions</h2>
+      <p>1. Open Mpesa Menu 📱</p>
+      <p>2. Select Lipa na Mpesa &gt; Buy Goods and Services.</p>
+      <p>3. Enter Till Number: 4951640 🔢</p>
+      <p>4. Enter Amount: Ksh 200 💰</p>
+      <p>5. Confirm Details and enter your Mpesa PIN 🔑</p>
+      <p>6. Press OK to complete ✅</p>
+      <p>After Payment: You’ll receive a confirmation message from Mpesa with a Transaction Code. Enter this code in the designated field to confirm your payment.</p>
+      <button class="close-btn" onclick="closePopup()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // Function to show Mpesa instructions popup if Mpesa is selected
+    function showMpesaInstructions() {
+      const paymentMethod = document.getElementById("paymentMethod").value;
+      const mpesaCodeField = document.getElementById("mpesaCodeField");
+      
+      if (paymentMethod === "mpesa") {
+        document.getElementById("mpesaPopup").style.display = "flex";
+      } else {
+        document.getElementById("mpesaPopup").style.display = "none";
+        mpesaCodeField.style.display = "none";  // Hide Mpesa code field for other payment methods
+      }
+    }
+
+    // Function to close the popup and show the Mpesa code field
+    function closePopup() {
+      document.getElementById("mpesaPopup").style.display = "none";
+      document.getElementById("mpesaCodeField").style.display = "block";  // Show Mpesa code field after popup closes
+    }
+  </script>
 </body>
 </html>
