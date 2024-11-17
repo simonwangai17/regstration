@@ -6,7 +6,67 @@
   <title>Jamii Investors</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Style for the payment popup */
+    /* General Styling */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .content .input-box {
+      margin-bottom: 15px;
+    }
+
+    .content .input-box span.details {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .content .input-box input,
+    .content .input-box select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .content .button input {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      background: #FFC037;
+      color: #000;
+      font-size: 18px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .content .button input:hover {
+      background: #e5a92c;
+    }
+
+    /* Popup Styles */
     .popup-overlay {
       display: none;
       position: fixed;
@@ -48,6 +108,32 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+    }
+
+    /* Button Styling */
+    #generateReferralBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #FFC037;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #generateReferralBtn:disabled {
+      background: #e0e0e0;
+      color: #666;
+      cursor: not-allowed;
+    }
+
+    /* Referral Link Container */
+    #referralLinkContainer p {
+      background: #f9f9f9;
+      padding: 10px;
+      border-radius: 5px;
+      word-wrap: break-word;
     }
   </style>
 </head>
@@ -91,27 +177,25 @@
             </select>
           </div>
 
-          <!-- Input for Mpesa code verification, hidden until payment method is chosen -->
+          <!-- Input for Mpesa code verification -->
           <div class="input-box" id="mpesaCodeField" style="display: none;">
             <span class="details">Mpesa Code</span>
-            <input type="text" name="code" placeholder="Input Mpesa Code" required>
+            <input type="text" name="code" placeholder="Input Mpesa Code">
           </div>
         </div>
 
-        <div class="gender-details">
-          <!-- Radio buttons for gender selection -->
-          <input type="radio" name="gender" id="dot-1">
-          <input type="radio" name="gender" id="dot-2">
-          <input type="radio" name="gender" id="dot-3">
-          <span class="gender-title">Gender</span>
-          <div class="category">
-            <label for="dot-1"><span class="dot one"></span><span class="gender">Male</span></label>
-            <label for="dot-2"><span class="dot two"></span><span class="gender">Female</span></label>
-            <label for="dot-3"><span class="dot three"></span><span class="gender">Prefer not to say</span></label>
-          </div>
+        <!-- Button to generate referral link -->
+        <div class="input-box" id="referralButtonContainer" style="display: none;">
+          <button type="button" id="generateReferralBtn" onclick="generateReferralLink()">Generate Referral Link</button>
         </div>
-        
-        <!-- Submit button -->
+
+        <!-- Display area for the referral link -->
+        <div class="input-box" id="referralLinkContainer" style="display: none;">
+          <span class="details">Your Referral Link</span>
+          <p id="referralLink"></p>
+          <input type="text" name="referral" placeholder="Copy and Paste the Code">
+        </div>
+
         <div class="button">
           <input type="submit" value="Register">
         </div>
@@ -139,19 +223,43 @@
     function showMpesaInstructions() {
       const paymentMethod = document.getElementById("paymentMethod").value;
       const mpesaCodeField = document.getElementById("mpesaCodeField");
-      
+
       if (paymentMethod === "mpesa") {
         document.getElementById("mpesaPopup").style.display = "flex";
       } else {
         document.getElementById("mpesaPopup").style.display = "none";
-        mpesaCodeField.style.display = "none";  // Hide Mpesa code field for other payment methods
+        mpesaCodeField.style.display = "none"; // Hide Mpesa code field for other payment methods
       }
     }
 
     // Function to close the popup and show the Mpesa code field
     function closePopup() {
       document.getElementById("mpesaPopup").style.display = "none";
-      document.getElementById("mpesaCodeField").style.display = "block";  // Show Mpesa code field after popup closes
+      document.getElementById("mpesaCodeField").style.display = "block"; // Show Mpesa code field after popup closes
+      document.getElementById("referralButtonContainer").style.display = "block"; // Show referral button
+    }
+
+    // Function to generate a referral link
+    function generateReferralLink() {
+      const mpesaCodeInput = document.querySelector("#mpesaCodeField input").value;
+      const referralButton = document.getElementById("generateReferralBtn");
+      const referralLinkContainer = document.getElementById("referralLinkContainer");
+      const referralLinkElement = document.getElementById("referralLink");
+
+      if (mpesaCodeInput.trim() === "") {
+        alert("Please enter the Mpesa code first.");
+        return;
+      }
+
+      // Simulate unique referral link generation
+      const uniqueCode = Math.random().toString(36).substr(2, 10); // Generate random string
+      const referralLink = `${uniqueCode}`;
+
+      // Display the referral link and disable the button
+      referralLinkElement.textContent = referralLink;
+      referralLinkContainer.style.display = "block";
+      referralButton.disabled = true; // Disable the button after first click
+      referralButton.textContent = "Referral Link Generated"; // Update button text
     }
   </script>
 </body>
